@@ -3,3 +3,4 @@ secrets.sh
 .terraform/
 .terraform*
 *.tfstate*
+*.tfvars
