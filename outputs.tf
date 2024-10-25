@@ -34,7 +34,7 @@ output "ec2_connection_info" {
   value = <<EOT
 Store the generated key locally:
 	terraform output -raw private_key > ${aws_key_pair.privatelink_key.key_name}.pem
-	chmod 400 ${aws_key_pair.privatelink_key.key_name}.pem
+	chmod 600 ${aws_key_pair.privatelink_key.key_name}.pem
 
 Connect to EC2 instance:
 	ssh -i ${aws_key_pair.privatelink_key.key_name}.pem ec2-user@${aws_instance.privatelink_test.public_ip}
@@ -49,16 +49,5 @@ In the SSH session to your EC2 instance, run:
 	curl -vvv --http2 --cert "client.pem" --key "client.key" --connect-to ::${aws_vpc_endpoint.temporal_cloud.dns_entry[0]["dns_name"]}:7233 https://${var.namespace_id}.${var.account_id}.tmprl.cloud:7233
 
 Note: Replace client.pem and client.key with the actual names of your mTLS certificate files.
-
-If successful, the end of the command line output should read something like:
-* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
-< HTTP/2 415
-< content-type: application/grpc
-< grpc-status: 3
-< grpc-message: invalid gRPC request content-type ""
-< date: Fri, 08 Mar 2024 20:50:39 GMT
-< server: temporal
-<
-* Connection #0 to host ${aws_vpc_endpoint.temporal_cloud.dns_entry[0]["dns_name"]} left intact
 EOT
 }
