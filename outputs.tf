@@ -46,7 +46,7 @@ Copy Temporal Cloud credentials:
 
 Test connectivity:
 In the SSH session to your EC2 instance, run:
-	curl -vvv --http2 --cert "client.pem" --key "client.key" --connect-to ::${aws_vpc_endpoint.temporal_cloud.dns_entry[0]["dns_name"]}:7233 https://${var.namespace_id}.${var.account_id}.tmprl.cloud:7233
+	curl -vvv --http2 --cert "cert.pem" --key "key.key" --connect-to ::${aws_vpc_endpoint.temporal_cloud.dns_entry[0]["dns_name"]}:7233 https://${var.namespace_id}.${var.account_id}.tmprl.cloud:7233
 
 Note: Replace client.pem and client.key with the actual names of your mTLS certificate files.
 EOT
