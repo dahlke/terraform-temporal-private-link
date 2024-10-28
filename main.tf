@@ -171,3 +171,48 @@ resource "aws_vpc_endpoint" "temporal_cloud" {
     Name = "${var.prefix}-temporal-cloud-privatelink-endpoint"
   }
 }
+
+# Create Network ACL
+resource "aws_network_acl" "main" {
+  vpc_id = aws_vpc.main.id
+
+  # Allow all inbound traffic
+  ingress {
+    protocol   = -1
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  # Block outbound traffic on port 7233
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 7233
+    to_port    = 7233
+  }
+
+  # Allow all other outbound traffic
+  egress {
+    protocol   = -1
+    rule_no    = 200
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "${var.prefix}-temporal-cloud-privatelink-nacl"
+  }
+}
+
+# Associate NACL with the subnet
+resource "aws_network_acl_association" "main" {
+  network_acl_id = aws_network_acl.main.id
+  subnet_id      = aws_subnet.privatelink_subnet.id
+}
